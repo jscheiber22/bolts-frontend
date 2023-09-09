@@ -2,10 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
-import Layout from './pages/Layout';
 import './index.css';
 import NavBar from './components/NavBar';
 import Projects from './pages/Projects';
+import Settings from './pages/Settings';
 
 export default function App() {
   return (
@@ -13,8 +13,9 @@ export default function App() {
       <NavBar />
       <BrowserRouter>
         <Routes>
-          <Route index element={<Home />} />
+          <Route index path="/" element={<Home />} />
           <Route path="projects" element={<Projects />} />
+          <Route path="settings" element={<Settings />} />
         </Routes>
       </BrowserRouter>
     </>
