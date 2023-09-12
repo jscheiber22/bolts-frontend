@@ -6,6 +6,7 @@ import './index.css';
 import NavBar from './components/NavBar';
 import Projects from './pages/Projects';
 import Settings from './pages/Settings';
+import Footer from './components/Footer';
 
 export default function App() {
   return (
@@ -18,6 +19,7 @@ export default function App() {
           <Route path="settings" element={<Settings />} />
         </Routes>
       </BrowserRouter>
+      <Footer />
     </>
   );
 }
