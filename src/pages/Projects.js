@@ -1,10 +1,17 @@
-import { Card, CardContent, CardMedia, Grid, Typography } from "@mui/material";
+import { Button, Card, CardContent, CardMedia, Grid, TextField, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 const Projects = () => {
 
     const [projects, setProjects] = useState([]);
+    const [addDataToggle, setAddDataToggle] = useState(false);
+    const [newProjectData, setNewProjectData] = useState({
+        "Year": "",
+        "Make": "",
+        "Model": "",
+        "Description": ""
+    })
 
     useEffect(() => {
         axios("http://localhost:5000/api/projects")
@@ -21,9 +28,24 @@ const Projects = () => {
 
     return (
         <div style={{margin: "3% 7.5% 0% 7.5%"}}>
-            <Typography variant="h2" style={{marginBottom: "3%"}} fontFamily={"inherit"}><strong>Projects :)</strong></Typography>
+            <div>
+                <Button color="primary" onClick={() => setAddDataToggle(!addDataToggle)}>New Project</Button> 
+                <Typography variant="h2" style={{marginBottom: "3%"}} fontFamily={"inherit"}><strong>Projects :)</strong></Typography>
+            </div>
+            { addDataToggle && 
+                <>
+                    <div>
+                        <TextField name="year" label="Year" variant="filled" style={{marginRight: "5%"}} />
+                        <TextField name="make" label="Make" variant="filled" style={{marginRight: "5%"}} />
+                        <TextField name="model" label="Model" variant="filled" style={{marginRight: "5%"}} />
+                    </div>
+                    <div style={{width: "75%"}}>
+                        <TextField name="description" label="Description" variant="filled" style={{marginTop: "3%"}} fullWidth multiline />
+                    </div>
+                </>
+            }
             <Grid container spacing={2}>
-                { projects ?
+                { projects && !addDataToggle &&
                     projects.map(project => 
                         <Grid item xs={6} key={project[0]}>
                             <Card>
@@ -38,8 +60,6 @@ const Projects = () => {
                             </Card>
                         </Grid>
                     )
-                  :
-                  <p> Loading... </p>
                 }
             </Grid>
         </div>
