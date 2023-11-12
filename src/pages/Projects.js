@@ -1,6 +1,7 @@
 import { Button, Card, CardContent, CardMedia, Grid, TextField, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import ImageUpload from "../components/ImageUpload";
 
 const Projects = () => {
 
@@ -11,7 +12,8 @@ const Projects = () => {
         "Make": "",
         "Model": "",
         "Description": ""
-    })
+    });
+    const [newProjectImage, setNewProjectImage] = useState(null);
 
     useEffect(() => {
         axios("http://localhost:5000/api/projects")
@@ -24,23 +26,38 @@ const Projects = () => {
         })
     }, []);
 
+    useEffect(() => {
+        console.log(newProjectImage);
+    }, []);
+
+    // const handleImageUpload = (e) => {
+    //     // setNewProjectImage(e);
+    //     console.log(e);
+    // }
 
 
     return (
         <div style={{margin: "3% 7.5% 0% 7.5%"}}>
+        { newProjectImage &&
+            <img src={URL.createObjectURL(newProjectImage)}></img>
+        }
             <div>
-                <Button color="primary" onClick={() => setAddDataToggle(!addDataToggle)}>New Project</Button> 
+                <Button color="primary" onClick={() => setAddDataToggle(!addDataToggle)} variant={addDataToggle ? "outlined" : "contained"}>{addDataToggle ? "Back": "New Project"}</Button> 
                 <Typography variant="h2" style={{marginBottom: "3%"}} fontFamily={"inherit"}><strong>Projects :)</strong></Typography>
             </div>
             { addDataToggle && 
                 <>
                     <div>
-                        <TextField name="year" label="Year" variant="filled" style={{marginRight: "5%"}} />
-                        <TextField name="make" label="Make" variant="filled" style={{marginRight: "5%"}} />
-                        <TextField name="model" label="Model" variant="filled" style={{marginRight: "5%"}} />
+                        <TextField name="Year" label="Year" variant="filled" style={{marginRight: "5%"}} onChange={e => setNewProjectData({...newProjectData, [e.target.name]: e.target.value})} />
+                        <TextField name="Make" label="Make" variant="filled" style={{marginRight: "5%"}} onChange={e => setNewProjectData({...newProjectData, [e.target.name]: e.target.value})}/>
+                        <TextField name="Model" label="Model" variant="filled" style={{marginRight: "5%"}}  onChange={e => setNewProjectData({...newProjectData, [e.target.name]: e.target.value})}/>
                     </div>
                     <div style={{width: "75%"}}>
-                        <TextField name="description" label="Description" variant="filled" style={{marginTop: "3%"}} fullWidth multiline />
+                        <TextField name="Description" label="Description" variant="filled" style={{marginTop: "3%"}} onChange={e => setNewProjectData({...newProjectData, [e.target.name]: e.target.value})} fullWidth multiline />
+                    </div>
+                    <ImageUpload image={setNewProjectImage}/>
+                    <div>
+                        <Button style={{marginLeft: "69%"}} onClick={e => console.log(newProjectData)} variant="contained">Submit</Button>
                     </div>
                 </>
             }
