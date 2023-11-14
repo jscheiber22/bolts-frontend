@@ -26,20 +26,30 @@ const Projects = () => {
         })
     }, []);
 
-    useEffect(() => {
-        console.log(newProjectImage);
-    }, []);
+    // useEffect(() => {
+    //     console.log(newProjectImage);
+    // }, []);
 
-    // const handleImageUpload = (e) => {
-    //     // setNewProjectImage(e);
-    //     console.log(e);
-    // }
+    const handleSubmit = () => {
+        const form = new FormData();
+
+        if (newProjectImage){
+            form.append('file', newProjectImage);
+        }
+        if (newProjectData){
+            form.append('car_details', JSON.stringify(newProjectData));
+        }
+
+        console.log(form);
+
+        axios.post("http://localhost:5000/api/new_project", form);
+    }
 
 
     return (
         <div style={{margin: "3% 7.5% 0% 7.5%"}}>
         { newProjectImage &&
-            <img src={URL.createObjectURL(newProjectImage)}></img>
+            <img src={URL.createObjectURL(newProjectImage)} width="240"></img>
         }
             <div>
                 <Button color="primary" onClick={() => setAddDataToggle(!addDataToggle)} variant={addDataToggle ? "outlined" : "contained"}>{addDataToggle ? "Back": "New Project"}</Button> 
@@ -57,7 +67,7 @@ const Projects = () => {
                     </div>
                     <ImageUpload image={setNewProjectImage}/>
                     <div>
-                        <Button style={{marginLeft: "69%"}} onClick={e => console.log(newProjectData)} variant="contained">Submit</Button>
+                        <Button style={{marginLeft: "69%"}} onClick={handleSubmit} variant="contained" disabled={!(newProjectData && newProjectImage)}>Submit</Button>
                     </div>
                 </>
             }
