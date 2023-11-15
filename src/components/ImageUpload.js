@@ -7,7 +7,6 @@ const UploadAndDisplayImage = ({image}) => {
 
   useEffect(() => {
     image(selectedImage);
-    // console.log(image);
   }, [selectedImage]);
 
   return (
@@ -15,9 +14,9 @@ const UploadAndDisplayImage = ({image}) => {
       <br />
       <br />
 
-      <Typography variant="h4" style={{marginBottom: "3%"}} fontFamily={"inherit"}>Cover Image:</Typography>
+      <Typography variant="h4" style={{marginBottom: "3%"}} fontFamily={"inherit"}>Upload Image:</Typography>
 
-      {/* {selectedImage && (
+      {selectedImage && (
         <div>
           <img
             alt="not found"
@@ -27,7 +26,7 @@ const UploadAndDisplayImage = ({image}) => {
           <br />
           <button onClick={() => setSelectedImage(null)}>Remove</button>
         </div>
-      )} */}
+      )}
 
       <br />
       
