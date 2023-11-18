@@ -1,7 +1,8 @@
-import { Button, Card, CardActions, CardContent, CardMedia, Grid, TextField, Typography } from "@mui/material";
+import { Button, Card, CardActions, CardContent, CardMedia, ImageList, TextField, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import ImageUpload from "../components/ImageUpload";
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const Projects = () => {
 
@@ -24,12 +25,12 @@ const Projects = () => {
         .catch(error => {
             console.error("error getting data: ", error);
         })
-    }, [addDataToggle, updateGrid]); // updates anytime the add window is toggled, may be a better way to do this
+    }, [addDataToggle, updateGrid]); // updates anytime the add window is toggled
 
 
 
     // TODO: handle response for errors in db entry/data
-    const handleSubmit = () => {
+    async function handleSubmit() {
         const form = new FormData();
 
         if (newProjectImage){
@@ -39,17 +40,15 @@ const Projects = () => {
             form.append('car_details', JSON.stringify(newProjectData));
         }
 
-        axios.post("http://localhost:5000/api/new_project", form);
-
+        await axios.post("http://localhost:5000/api/projects", form);
         setUpdateGrid(!updateGrid);
-
         // reset addDataToggle so it resets to project screen
         // TODO: maybe redirect to project page eventually
         setAddDataToggle(!addDataToggle);
     }
 
-    const handleDelete = (column_id) => {
-        axios.post("http://localhost:5000/api/del_project/" + column_id);
+    async function handleDelete(column_id) {
+        await axios.post("http://localhost:5000/api/del_project/" + column_id);
         setUpdateGrid(!updateGrid);
     }
 
@@ -58,7 +57,7 @@ const Projects = () => {
         <div style={{margin: "3% 7.5% 0% 7.5%"}}>
             <div>
                 <Button color="primary" onClick={() => setAddDataToggle(!addDataToggle)} variant={addDataToggle ? "outlined" : "contained"}>{addDataToggle ? "Back": "New Project"}</Button> 
-                <Typography variant="h2" style={{marginBottom: "3%"}} fontFamily={"inherit"}><strong>Projects :)</strong></Typography>
+                <Typography variant="h2" style={{marginBottom: "3%"}} fontFamily={"inherit"}><strong>Recent Projects</strong></Typography>
             </div>
             { addDataToggle && 
                 <>
@@ -76,28 +75,37 @@ const Projects = () => {
                     </div>
                 </>
             }
-            <Grid container spacing={2}>
+            <ImageList
+                sx={{
+                    gridAutoFlow: "column",
+                    gridTemplateColumns: "repeat(auto-fill,minmax(25%,33%)) !important",
+                    gridAutoColumns: "minmax(25%, 33%)"
+                }}
+                >
                 { projects && !addDataToggle &&
                     projects.map(project => 
-                        <Grid item xs={6} key={project[0]}>
-                            <Card>
-                                <CardMedia
-                                    sx={{ height: 140 }}
-                                    image={project[5]}
-                                    title={project[1] + " " + project[2]}
-                                    component='img'
-                                />
-                                <CardContent>
-                                    <Typography variant="h3">{project[3] + " " + project[1] + " " + project[2]}</Typography>
-                                </CardContent>
-                                <CardActions>
-                                    <Button onClick={() => {handleDelete(project[0]);}}>Delete</Button>
-                                </CardActions>
-                            </Card>
-                        </Grid>
+                        <Card key={project[0]}>
+                            <CardMedia
+                                sx={{ height: 140 }}
+                                image={"data:image/jpg;base64," + project[5]}
+                                title={project[1] + " " + project[2]}
+                                component='img'
+                            />
+                            <CardContent>
+                                <Typography variant="h3">{project[3] + " " + project[1] + " " + project[2]}</Typography>
+                                { (project[4] !== 'None') ?
+                                    <Typography variant="h4">{project[4]}</Typography>
+                                    :
+                                    <br />
+                                }
+                            </CardContent>
+                            <CardActions style={{justifyContent: 'right'}}>
+                                <Button onClick={() => {handleDelete(project[0]);}}><DeleteIcon /></Button>
+                            </CardActions>
+                        </Card>
                     )
                 }
-            </Grid>
+            </ImageList>
         </div>
     )
 }
