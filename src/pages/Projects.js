@@ -1,4 +1,4 @@
-import { Button, Card, CardActions, CardContent, CardMedia, ImageList, TextField, Typography } from "@mui/material";
+import { Button, ButtonBase, Card, CardActionArea, CardActions, CardContent, CardMedia, ImageList, Link, TextField, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import ImageUpload from "../components/ImageUpload";
@@ -53,61 +53,112 @@ const Projects = () => {
     }
 
 
-    return (
-        <div style={{margin: "3% 7.5% 0% 7.5%"}}>
-            <div>
-                <Button color="primary" onClick={() => setAddDataToggle(!addDataToggle)} variant={addDataToggle ? "outlined" : "contained"}>{addDataToggle ? "Back": "New Project"}</Button> 
-                <Typography variant="h2" style={{marginBottom: "3%"}} fontFamily={"inherit"}><strong>Recent Projects</strong></Typography>
-            </div>
-            { addDataToggle && 
-                <>
-                    <div>
-                        <TextField name="Year" label="Year" variant="filled" style={{marginRight: "5%"}} onChange={e => setNewProjectData({...newProjectData, [e.target.name]: e.target.value})} />
-                        <TextField name="Make" label="Make" variant="filled" style={{marginRight: "5%"}} onChange={e => setNewProjectData({...newProjectData, [e.target.name]: e.target.value})}/>
-                        <TextField name="Model" label="Model" variant="filled" style={{marginRight: "5%"}}  onChange={e => setNewProjectData({...newProjectData, [e.target.name]: e.target.value})}/>
-                    </div>
-                    <div style={{width: "75%"}}>
-                        <TextField name="Description" label="Description" variant="filled" style={{marginTop: "3%"}} onChange={e => setNewProjectData({...newProjectData, [e.target.name]: e.target.value})} fullWidth multiline />
-                    </div>
-                    <ImageUpload image={setNewProjectImage}/>
-                    <div>
-                        <Button style={{marginLeft: "69%"}} onClick={handleSubmit} variant="contained" disabled={!(newProjectData)}>Submit</Button>
-                    </div>
-                </>
-            }
-            <ImageList
-                sx={{
-                    gridAutoFlow: "column",
-                    gridTemplateColumns: "repeat(auto-fill,minmax(25%,33%)) !important",
-                    gridAutoColumns: "minmax(25%, 33%)"
-                }}
-                >
-                { projects && !addDataToggle &&
-                    projects.map(project => 
-                        <Card key={project[0]}>
-                            <CardMedia
-                                sx={{ height: 140 }}
-                                image={"data:image/jpg;base64," + project[5]}
-                                title={project[1] + " " + project[2]}
-                                component='img'
-                            />
-                            <CardContent>
-                                <Typography variant="h3">{project[3] + " " + project[1] + " " + project[2]}</Typography>
-                                { (project[4] !== 'None') ?
-                                    <Typography variant="h4">{project[4]}</Typography>
-                                    :
-                                    <br />
-                                }
-                            </CardContent>
-                            <CardActions style={{justifyContent: 'right'}}>
-                                <Button onClick={() => {handleDelete(project[0]);}}><DeleteIcon /></Button>
-                            </CardActions>
-                        </Card>
-                    )
+    if (projects.length > 0){
+        return (
+            <div style={{margin: "3% 7.5% 0% 7.5%"}}>
+                <div>
+                    <Button color="primary" onClick={() => setAddDataToggle(!addDataToggle)} variant={addDataToggle ? "outlined" : "contained"}>{addDataToggle ? "Back": "New Project"}</Button> 
+                    <Typography variant="h2" style={{marginBottom: "3%"}} fontFamily={"inherit"}><strong>{addDataToggle ? "New Project": "Recent Projects"}</strong></Typography>
+                </div>
+                { addDataToggle && 
+                    <>
+                        <div>
+                            <TextField name="Year" label="Year" variant="filled" style={{marginRight: "5%"}} onChange={e => setNewProjectData({...newProjectData, [e.target.name]: e.target.value})} />
+                            <TextField name="Make" label="Make" variant="filled" style={{marginRight: "5%"}} onChange={e => setNewProjectData({...newProjectData, [e.target.name]: e.target.value})}/>
+                            <TextField name="Model" label="Model" variant="filled" style={{marginRight: "5%"}}  onChange={e => setNewProjectData({...newProjectData, [e.target.name]: e.target.value})}/>
+                        </div>
+                        <div style={{width: "75%"}}>
+                            <TextField name="Description" label="Description" variant="filled" style={{marginTop: "3%"}} onChange={e => setNewProjectData({...newProjectData, [e.target.name]: e.target.value})} fullWidth multiline />
+                        </div>
+                        <ImageUpload image={setNewProjectImage}/>
+                        <div>
+                            <Button style={{marginLeft: "69%"}} onClick={handleSubmit} variant="contained" disabled={!(newProjectData)}>Submit</Button>
+                        </div>
+                    </>
                 }
-            </ImageList>
-        </div>
-    )
+                { projects && !addDataToggle &&
+                    <>
+                        <ImageList
+                            sx={{
+                                gridAutoFlow: "column",
+                                gridTemplateColumns: "repeat(auto-fill,minmax(25%,33%)) !important",
+                                gridAutoColumns: "minmax(25%, 33%)"
+                            }}
+                        >
+                            { projects.map(project => 
+                                <Card key={project[0]} variant={'outlined'}>
+                                    <CardActionArea href={"sections/project?id=" + project[0]}>
+                                        <CardMedia
+                                            sx={{ height: 140 }}
+                                            image={"data:image/jpg;base64," + project[5]}
+                                            title={project[1] + " " + project[2]}
+                                            component='img'
+                                        />
+                                        <CardContent>
+                                            <Typography variant="h5">{project[3] + " " + project[1] + " " + project[2]}</Typography>
+                                            { (project[4] !== 'None') ?
+                                                <Typography variant="body2">{project[4]}</Typography>
+                                                :
+                                                <Typography variant="body2">A project</Typography>
+                                            }
+                                        </CardContent>
+                                    </CardActionArea>
+                                    <CardActions style={{justifyContent: 'right'}}>
+                                        <Button onClick={() => {handleDelete(project[0]);}}><DeleteIcon /></Button>
+                                    </CardActions>
+                                </Card>
+                            )}
+                        </ImageList>
+
+                        <div>
+                            <br />
+                            <Typography variant="h2" style={{marginBottom: "3%"}} fontFamily={"inherit"}><strong>Favorites</strong></Typography>
+                            <ImageList
+                            sx={{
+                                gridAutoFlow: "column",
+                                gridTemplateColumns: "repeat(auto-fill,minmax(25%,33%)) !important",
+                                gridAutoColumns: "minmax(25%, 33%)"
+                            }}
+                        >
+                            { projects.map(project => {
+                                if (project[6] === 1){
+                                    return (
+                                    <Card key={project[0]} variant={'outlined'}>
+                                        <CardActionArea href={"sections/project?id=" + project[0]}>
+                                            <CardMedia
+                                                sx={{ height: 140 }}
+                                                image={"data:image/jpg;base64," + project[5]}
+                                                title={project[1] + " " + project[2]}
+                                                component='img'
+                                            />
+                                            <CardContent>
+                                                <Typography variant="h5">{project[3] + " " + project[1] + " " + project[2]}</Typography>
+                                                { (project[4] !== 'None') ?
+                                                    <Typography variant="body2">{project[4]}</Typography>
+                                                    :
+                                                    <Typography variant="body2">A project</Typography>
+                                                }
+                                            </CardContent>
+                                        </CardActionArea>
+                                        <CardActions style={{justifyContent: 'right'}}>
+                                            <Button onClick={() => {handleDelete(project[0]);}}><DeleteIcon /></Button>
+                                        </CardActions>
+                                    </Card>
+                                )}
+                            })}
+                        </ImageList>
+                        </div>
+                    </>
+                }
+
+            </div>
+        )
+    } else {
+        // TODO replace with loading icon or something
+        return(
+            <Typography variant="body1">{"Loading..."}</Typography>
+        )
+    }
 }
 
 export default Projects;

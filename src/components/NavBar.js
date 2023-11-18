@@ -16,7 +16,6 @@ const NavBar = () => {
                       Bolts - Dev
                     </Typography>
                     <Button color="inherit" href="/">Home</Button>
-                    <Button color="inherit" href="projects">Projects</Button>
                     <Button color="inherit" href="settings">Settings</Button>
                   </Toolbar>
                 </AppBar>

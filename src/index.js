@@ -1,12 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Home from "./pages/Home";
 import './index.css';
 import NavBar from './components/NavBar';
 import Projects from './pages/Projects';
 import Settings from './pages/Settings';
 import Footer from './components/Footer';
+import Sections from './pages/Sections';
 
 export default function App() {
   return (
@@ -14,9 +14,11 @@ export default function App() {
       <NavBar />
       <BrowserRouter>
         <Routes>
-          <Route index path="/" element={<Home />} />
-          <Route path="projects" element={<Projects />} />
-          <Route path="settings" element={<Settings />} />
+          <Route path="/">
+            <Route index element={<Projects />} />
+            <Route path="settings" element={<Settings />} />
+            <Route path="sections/:id" element={<Sections />} />
+          </Route>
         </Routes>
       </BrowserRouter>
       <Footer />
