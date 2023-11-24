@@ -78,6 +78,7 @@ const Projects = () => {
                 }
                 { projects && !addDataToggle &&
                     <>
+                        {/* Recent Projects */}
                         <ImageList
                             sx={{
                                 gridAutoFlow: "column",
@@ -110,6 +111,9 @@ const Projects = () => {
                             )}
                         </ImageList>
 
+
+                        {/* TODO Add favorite star to each card w udpate patch */}
+                        {/* Favorites */}
                         <div>
                             <br />
                             <Typography variant="h2" style={{marginBottom: "3%"}} fontFamily={"inherit"}><strong>Favorites</strong></Typography>
